@@ -27,9 +27,7 @@ resource "cloudfoundry_app" "exporter" {
   memory       = var.exporter_memory
   environment = merge({
     //noinspection HILUnresolvedReference
-    REDIS_ADDR = "https://${cloudfoundry_service_key.key.credentials.hostname}:${cloudfoundry_service_key.key.credentials.management_port}"
-    //noinspection HILUnresolvedReference
-    REDIS_USER = cloudfoundry_service_key.key.credentials.username
+    REDIS_ADDR = "redis://${cloudfoundry_service_key.key.credentials.hostname}:${cloudfoundry_service_key.key.credentials.port}"
     //noinspection HILUnresolvedReference
     REDIS_PASSWORD = cloudfoundry_service_key.key.credentials.password
   }, var.exporter_environment)
