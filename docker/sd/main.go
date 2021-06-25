@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/url"
 	"sd/xredis"
+	"strings"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/labstack/echo/v4"
@@ -22,9 +24,17 @@ func main() {
 	viper.SetEnvPrefix("")
 	viper.AutomaticEnv()
 	ctx := context.Background()
-
+	addr := viper.GetString("redis_addr")
+	if strings.HasPrefix(addr, "redis://") {
+		parsed, err := url.Parse(addr)
+		if err != nil {
+			fmt.Printf("error parsing REDIS_ADDR: %v\n", err)
+			return
+		}
+		addr = parsed.Host
+	}
 	config := &redis.Options{
-		Addr:     viper.GetString("redis_addr"),
+		Addr:     addr,
 		Password: viper.GetString("redis_password"),
 	}
 	client := redis.NewSentinelClient(config)
