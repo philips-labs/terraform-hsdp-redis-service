@@ -25,7 +25,7 @@ resource "cloudfoundry_app" "exporter" {
   docker_image = var.exporter_image
   disk_quota   = var.exporter_disk_quota
   memory       = var.exporter_memory
-  docker_credentials {
+  docker_credentials = {
     username = var.docker_username
     password = var.docker_password
   }
