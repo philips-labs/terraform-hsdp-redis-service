@@ -17,14 +17,14 @@ variable "exporter_image" {
 
 variable "docker_username" {
   description = "Docker username to use"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 variable "docker_password" {
   description = "Docker password to use"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 variable "plan" {
