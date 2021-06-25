@@ -27,7 +27,8 @@ resource "cloudfoundry_app" "exporter" {
   memory       = var.exporter_memory
   environment = merge({
     //noinspection HILUnresolvedReference
-    REDIS_ADDR = "redis://${cloudfoundry_service_key.key.credentials.hostname}:${cloudfoundry_service_key.key.credentials.port}"
+    //REDIS_ADDR = "redis://${cloudfoundry_service_key.key.credentials.hostname}:${cloudfoundry_service_key.key.credentials.sentinel_port}"
+    REDIS_ADDR = "172.19.28.27:6379"
     //noinspection HILUnresolvedReference
     REDIS_PASSWORD = cloudfoundry_service_key.key.credentials.password
   }, var.exporter_environment)
@@ -42,7 +43,9 @@ resource "cloudfoundry_app" "exporter" {
   annotations = {
     "prometheus.exporter.group"    = "redis_exporter"
     "prometheus.exporter.port"     = "9121"
-    "prometheus.exporter.endpoint" = "/metrics"
+    "prometheus.exporter.scrape"   = "/scrape"
+    "prometheus.discovery.port"    = "9122"
+    "prometheus.discovery.targets" = "/targets"
   }
 }
 
