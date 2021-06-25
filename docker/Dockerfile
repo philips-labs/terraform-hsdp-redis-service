@@ -6,9 +6,8 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=$GOARCH go build -o /redis_exporter .
 
 FROM golang:1.16.5-alpine as builder2
 WORKDIR /build
-COPY . .
-WORKDIR /build/sd
-RUN go mod download
+COPY sd/ .
+RUN go mod download -x
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=$GOARCH go build -o /sd
 
 
