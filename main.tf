@@ -25,6 +25,10 @@ resource "cloudfoundry_app" "exporter" {
   docker_image = var.exporter_image
   disk_quota   = var.exporter_disk_quota
   memory       = var.exporter_memory
+  docker_credentials {
+    username = var.docker_username
+    password = var.docker_password
+  }
   environment = merge({
     //noinspection HILUnresolvedReference
     //REDIS_ADDR = "redis://${cloudfoundry_service_key.key.credentials.hostname}:${cloudfoundry_service_key.key.credentials.sentinel_port}"

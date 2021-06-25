@@ -11,8 +11,20 @@ variable "name_postfix" {
 
 variable "exporter_image" {
   description = "Image to use for Redis exporter"
-  default     = "oliver006/redis_exporter:latest"
+  default     = "philipslabs/cf-redis-exporter:latest"
   type        = string
+}
+
+variable "docker_username" {
+  description = "Docker username to use"
+  type = string
+  default = ""
+}
+
+variable "docker_password" {
+  description = "Docker password to use"
+  type = string
+  default = ""
 }
 
 variable "plan" {

@@ -31,6 +31,10 @@ func main() {
 
 	var targets []Node
 	res := client.Masters(ctx).Val()
+	if len(res) == 0 {
+		fmt.Printf("no master found: exiting\n")
+		return
+	}
 	out := res[0].([]interface{})
 	var master Node
 	err := xredis.ScanToStruct(out, &master, "redis")
