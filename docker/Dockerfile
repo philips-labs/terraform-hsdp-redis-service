@@ -1,13 +1,15 @@
-FROM golang:1.16-alpine as builder
+FROM golang:1.16.5-alpine as builder
 WORKDIR /go/src/github.com/oliver006/redis_exporter/
 RUN apk --no-cache add ca-certificates git
 RUN git clone https://github.com/oliver006/redis_exporter.git .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=$GOARCH go build -o /redis_exporter .
 
-FROM golang:1.16-alpine as sd
-WORKDIR .
-COPY sd/ .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=$GOARCH go build -o /sd .
+FROM golang:1.16.5-alpine as builder2
+WORKDIR /build
+COPY . .
+WORKDIR /build/sd
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=$GOARCH go build -o /sd
 
 
 ## Build final image
@@ -17,11 +19,10 @@ RUN apk add --no-cache ca-certificates supervisor jq curl && rm -rf /tmp/* /var/
 
 RUN mkdir -p /sidecars/bin /sidecars/supervisor/conf.d sidecars/etc
 
-COPY --from=builders /redis_exporter /sidecars/bin
-COPY --from=sd     /sd     /sidecars/bin
+COPY --from=builder /redis_exporter /sidecars/bin
+COPY --from=builder2     /sd     /sidecars/bin
 
 COPY supervisord_configs/ /sidecars/supervisor/conf.d
-COPY scripts/ /sidecars/bin
 
 EXPOSE 9121
 
