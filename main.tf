@@ -41,10 +41,10 @@ resource "cloudfoundry_app" "exporter" {
     route = cloudfoundry_route.exporter.id
   }
   labels = {
-    "prometheus.io/exporter" = true,
+    "variant.tva/exporter" = true,
   }
   annotations = {
-    "prometheus.exporter.group"    = "redis_exporter"
+    "prometheus.exporter.type"     = "redis_exporter"
     "prometheus.exporter.port"     = "9121"
     "prometheus.exporter.scrape"   = "/scrape"
     "prometheus.discovery.port"    = "9122"
