@@ -44,11 +44,11 @@ resource "cloudfoundry_app" "exporter" {
     "variant.tva/exporter" = true,
   }
   annotations = {
-    "prometheus.exporter.type"     = "redis_exporter"
-    "prometheus.exporter.port"     = "9121"
-    "prometheus.exporter.scrape"   = "/scrape"
-    "prometheus.discovery.port"    = "9122"
-    "prometheus.discovery.targets" = "/targets"
+    "prometheus.exporter.type" = "redis_exporter"
+    "prometheus.exporter.port" = "9121"
+    "prometheus.exporter.path" = "/scrape"
+    "prometheus.targets.port"  = "9122"
+    "prometheus.targets.path"  = "/targets"
   }
 }
 
