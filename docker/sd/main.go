@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -92,7 +93,7 @@ func targetsHandler(targets []Node) echo.HandlerFunc {
 				},
 			})
 		}
-		c.Response().Header().Set("Content-Type", "application/json") // Prometheus bug #9017
-		return c.JSON(http.StatusOK, response)
+		data, _ := json.Marshal(response)
+		return c.Blob(http.StatusOK, "application/json", data) // Prometheus bug #9017
 	}
 }
