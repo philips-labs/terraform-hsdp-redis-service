@@ -82,16 +82,17 @@ type StaticConfig struct {
 type TargetResponse []StaticConfig
 
 func targetsHandler(targets []Node) echo.HandlerFunc {
-	response := TargetResponse{}
-	for _, node := range targets {
-		response = append(response, StaticConfig{
-			Targets: []string{fmt.Sprintf("%s:%s", node.IP, node.Port)},
-			Labels: map[string]string{
-				"__meta_redis_node_type": node.Type,
-			},
-		})
-	}
 	return func(c echo.Context) error {
+		response := TargetResponse{}
+		for _, node := range targets {
+			response = append(response, StaticConfig{
+				Targets: []string{fmt.Sprintf("%s:%s", node.IP, node.Port)},
+				Labels: map[string]string{
+					"__meta_redis_node_type": node.Type,
+				},
+			})
+		}
+		c.Response().Header().Set("Content-Type", "application/json") // Prometheus bug #9017
 		return c.JSON(http.StatusOK, response)
 	}
 }

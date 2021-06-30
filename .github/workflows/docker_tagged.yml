@@ -1,11 +1,12 @@
-name: ci
+name: docker tagged
 
 on:
   push:
-    branches: ["main"]
+    tags:
+    - '*'
 
 jobs:
-  build:
+  main:
     runs-on: ubuntu-latest
     steps:
       -
@@ -27,15 +28,26 @@ jobs:
           registry: docker.na1.hsdp.io
           username: ${{ secrets.HSDP_DOCKER_USERNAME }}
           password: ${{ secrets.HSDP_DOCKER_PASSWORD }}
-      - uses: actions/checkout@v2
       -
-        name: Build and push sd
+        name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          # We must fetch at least the immediate parents so that if this is
+          # a pull request then we can checkout the head.
+          fetch-depth: 2
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      -
+        name: Build and push
+        id: docker_build
         uses: docker/build-push-action@v2
         with:
           context: ./docker
           file: ./docker/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: philipslabs/cf-redis-exporter,docker.na1.hsdp.io/philipslabs/cf-redis-exporter
-          cache-from: type=registry,ref=philipslabs/cf-redis-exporter:latest
-          cache-to: type=inline
+          tags: philipslabs/cf-redis-exporter:${{ steps.vars.outputs.tag }},docker.na1.hsdp.io/philipslabs/cf-redis-exporter:${{ steps.vars.outputs.tag }}
+      -
+        name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
