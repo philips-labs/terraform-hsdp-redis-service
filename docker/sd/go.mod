@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/go-redis/redis/v8 v8.11.2
-	github.com/labstack/echo/v4 v4.3.0
+	github.com/labstack/echo/v4 v4.5.0
 	github.com/mattn/go-isatty v0.0.13 // indirect
 	github.com/spf13/viper v1.8.1
 	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e // indirect
