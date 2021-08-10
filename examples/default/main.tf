@@ -10,9 +10,8 @@ data "cloudfoundry_space" "space" {
 module "thanos" {
   source = "philips-labs/thanos/cloudfoundry"
 
-  cf_org_name      = "test"
-  cf_space_id      = data.cloudfoundry_space.space.id
-  grafana_password = "supersecret"
+  cf_org_name = "test"
+  cf_space_id = data.cloudfoundry_space.space.id
 }
 
 module "redis" {
