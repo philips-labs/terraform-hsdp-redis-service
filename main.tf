@@ -31,7 +31,7 @@ resource "cloudfoundry_app" "exporter" {
   }
   environment = merge({
     //noinspection HILUnresolvedReference
-    REDIS_ADDR = "redis://${cloudfoundry_service_key.key.credentials.hostname}:${cloudfoundry_service_key.key.credentials.sentinel_port}"
+    REDIS_ADDR = "redis://${cloudfoundry_service_key.key.credentials.hostname}:${cloudfoundry_service_key.key.credentials.port}"
     //noinspection HILUnresolvedReference
     REDIS_PASSWORD = cloudfoundry_service_key.key.credentials.password
   }, var.exporter_environment)

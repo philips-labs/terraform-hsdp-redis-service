@@ -1,9 +1,8 @@
 # Terraform HSDP Redis service module
 
-Provisions a HSDP Redis server instance, including a Prometheus exporter endpoint. This is for 
-use with the [Thanos](https://registry.terraform.io/modules/philips-labs/thanos/cloudfoundry/latest) for custom metrics collection.
+Provisions an HSDP Redis server instance, including a Prometheus exporter endpoint. Allowing collection of custom metrics using tools such as [Thanos](https://registry.terraform.io/modules/philips-labs/thanos/cloudfoundry/latest).
 
-## Example 
+## Example
 
 TODO
 
