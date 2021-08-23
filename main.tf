@@ -1,5 +1,6 @@
 locals {
-  postfix = var.name_postfix != "" ? var.name_postfix : random_id.id.hex
+  postfix            = var.name_postfix != "" ? var.name_postfix : random_id.id.hex
+  planCredentialPort = var.plan == "redis-standard-standalone" || var.plan == "redis-development-standalone" ? "port" : "sentinel_port"
 }
 
 resource "random_id" "id" {
@@ -31,7 +32,7 @@ resource "cloudfoundry_app" "exporter" {
   }
   environment = merge({
     //noinspection HILUnresolvedReference
-    REDIS_ADDR = "redis://${cloudfoundry_service_key.key.credentials.hostname}:${cloudfoundry_service_key.key.credentials.port}"
+    REDIS_ADDR = "redis://${cloudfoundry_service_key.key.credentials.hostname}:${cloudfoundry_service_key.key.credentials[local.planCredentialPort]}"
     //noinspection HILUnresolvedReference
     REDIS_PASSWORD = cloudfoundry_service_key.key.credentials.password
   }, var.exporter_environment)
