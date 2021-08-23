@@ -18,11 +18,3 @@ module "redis" {
   source      = "philips-labs/redis-service/hsdp"
   cf_space_id = data.cloudfoundry_space.space.id
 }
-
-resource "cloudfoundry_network_policy" "redis_exporter" {
-  policy {
-    source_app      = module.thanos.thanos_app_id
-    destination_app = module.redis.metrics_app_id
-    port            = module.redis.metrics_port
-  }
-}
