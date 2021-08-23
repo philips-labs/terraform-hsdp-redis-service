@@ -1,6 +1,6 @@
 locals {
   postfix            = var.name_postfix != "" ? var.name_postfix : random_id.id.hex
-  planCredentialPort = var.plan == "redis-standard-standalone" || var.plan == "redis-development-standalone" ? "port" : "sentinel_port"
+  planCredentialPort = replace(var.plan, "standalone", "") != var.plan ? "port" : "sentinel_port"
 }
 
 resource "random_id" "id" {
