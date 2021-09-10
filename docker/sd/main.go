@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/url"
 	"sd/xredis"
-	"strings"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/labstack/echo/v4"
@@ -26,16 +25,13 @@ func main() {
 	viper.AutomaticEnv()
 	ctx := context.Background()
 	addr := viper.GetString("redis_addr")
-	if strings.HasPrefix(addr, "redis://") {
-		parsed, err := url.Parse(addr)
-		if err != nil {
-			fmt.Printf("error parsing REDIS_ADDR: %v\n", err)
-			return
-		}
-		addr = parsed.Host
+	parsed, err := url.Parse(addr)
+	if err != nil || parsed.Scheme != "redis" {
+		fmt.Printf("error parsing REDIS_ADDR: %s [%v]\n", addr, err)
+		return
 	}
 	config := &redis.Options{
-		Addr:     addr,
+		Addr:     parsed.Host,
 		Password: viper.GetString("redis_password"),
 	}
 	client := redis.NewSentinelClient(config)
@@ -43,7 +39,7 @@ func main() {
 	var targets []Node
 	res := client.Masters(ctx).Val()
 	if len(res) > 0 {
-		fmt.Printf("sd: sentinel mode\n")
+		fmt.Printf("sd: sentinel mode: %s\n", addr)
 		out := res[0].([]interface{})
 		var master Node
 		err := xredis.ScanToStruct(out, &master, "redis")
@@ -68,12 +64,7 @@ func main() {
 			targets = append(targets, slave)
 		}
 	} else { // Single node
-		fmt.Printf("sd: standalone mode\n")
-		parsed, err := url.Parse(addr)
-		if err != nil {
-			fmt.Printf("error parsing address '%s': %v\n", addr, err)
-			return
-		}
+		fmt.Printf("sd: standalone mode: %s\n", addr)
 		targets = append(targets, Node{
 			Type: "master",
 			IP:   parsed.Hostname(),
