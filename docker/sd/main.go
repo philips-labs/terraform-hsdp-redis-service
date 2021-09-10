@@ -43,7 +43,7 @@ func main() {
 	var targets []Node
 	res := client.Masters(ctx).Val()
 	if len(res) > 0 {
-
+		fmt.Printf("sd: sentinel mode\n")
 		out := res[0].([]interface{})
 		var master Node
 		err := xredis.ScanToStruct(out, &master, "redis")
@@ -68,9 +68,16 @@ func main() {
 			targets = append(targets, slave)
 		}
 	} else { // Single node
+		fmt.Printf("sd: standalone mode\n")
+		parsed, err := url.Parse(addr)
+		if err != nil {
+			fmt.Printf("error parsing address '%s': %v\n", addr, err)
+			return
+		}
 		targets = append(targets, Node{
 			Type: "master",
-			IP:   addr,
+			IP:   parsed.Hostname(),
+			Port: parsed.Port(),
 		})
 	}
 	e := echo.New()
