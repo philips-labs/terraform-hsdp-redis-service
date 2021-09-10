@@ -42,34 +42,37 @@ func main() {
 
 	var targets []Node
 	res := client.Masters(ctx).Val()
-	if len(res) == 0 {
-		fmt.Printf("no master found: exiting\n")
-		return
-	}
-	out := res[0].([]interface{})
-	var master Node
-	err := xredis.ScanToStruct(out, &master, "redis")
-	if err != nil {
-		fmt.Printf("error: %v\n", err)
-		return
-	}
-	fmt.Printf("master: %v\n", master)
-	master.Type = "master"
-	targets = append(targets, master)
+	if len(res) > 0 {
 
-	res = client.Slaves(ctx, master.Name).Val()
-	for _, s := range res {
-		out := s.([]interface{})
-		var slave Node
-		err = xredis.ScanToStruct(out, &slave, "redis")
+		out := res[0].([]interface{})
+		var master Node
+		err := xredis.ScanToStruct(out, &master, "redis")
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
+			return
 		}
-		slave.Type = "slave"
-		fmt.Printf("slave: %v\n", slave)
-		targets = append(targets, slave)
-	}
+		fmt.Printf("master: %v\n", master)
+		master.Type = "master"
+		targets = append(targets, master)
 
+		res = client.Slaves(ctx, master.Name).Val()
+		for _, s := range res {
+			out := s.([]interface{})
+			var slave Node
+			err = xredis.ScanToStruct(out, &slave, "redis")
+			if err != nil {
+				fmt.Printf("error: %v\n", err)
+			}
+			slave.Type = "slave"
+			fmt.Printf("slave: %v\n", slave)
+			targets = append(targets, slave)
+		}
+	} else { // Single node
+		targets = append(targets, Node{
+			Type: "master",
+			IP:   addr,
+		})
+	}
 	e := echo.New()
 	e.GET("/targets", targetsHandler(targets))
 	_ = e.Start(":9122")
