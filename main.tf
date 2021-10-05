@@ -16,7 +16,7 @@ resource "cloudfoundry_service_instance" "redis" {
 }
 
 resource "cloudfoundry_service_key" "key" {
-  name             = "key"
+  name             = "tf-redis-${cloudfoundry_service_instance.redis.id}-${local.postfix}"
   service_instance = cloudfoundry_service_instance.redis.id
 }
 
