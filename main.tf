@@ -4,7 +4,7 @@ locals {
 }
 
 resource "random_id" "id" {
-  byte_length = 8
+  byte_length = 4
 }
 
 resource "cloudfoundry_service_instance" "redis" {
@@ -16,7 +16,7 @@ resource "cloudfoundry_service_instance" "redis" {
 }
 
 resource "cloudfoundry_service_key" "key" {
-  name             = "tf-redis-${cloudfoundry_service_instance.redis.id}-${local.postfix}"
+  name             = "tf-key-${local.postfix}"
   service_instance = cloudfoundry_service_instance.redis.id
 }
 
