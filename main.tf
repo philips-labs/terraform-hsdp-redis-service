@@ -13,6 +13,7 @@ resource "cloudfoundry_service_instance" "redis" {
   //noinspection HILUnresolvedReference
   service_plan                   = data.cloudfoundry_service.redis.service_plans[var.plan]
   replace_on_service_plan_change = true
+  recursive_delete               = var.recursive_delete_service
 }
 
 resource "cloudfoundry_service_key" "key" {

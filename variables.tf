@@ -50,3 +50,9 @@ variable "exporter_environment" {
   description = "Additional configuration for the exporter"
   default     = {}
 }
+
+variable "recursive_delete_service" {
+  type        = bool
+  description = "Delete service bindings, keys and routes while destroying the service"
+  default     = false
+}
