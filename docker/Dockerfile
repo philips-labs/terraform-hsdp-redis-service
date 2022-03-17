@@ -12,7 +12,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=$GOARCH go build -o /sd
 
 
 ## Build final image
-FROM alpine:3.15.0
+FROM alpine:3.15.1
 LABEL maintainer="andy.lo-a-foe@philips.com"
 RUN apk add --no-cache ca-certificates supervisor jq curl && rm -rf /tmp/* /var/cache/apk/*
 
