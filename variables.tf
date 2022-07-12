@@ -56,3 +56,15 @@ variable "recursive_delete_service" {
   description = "Delete service bindings, keys and routes while destroying the service"
   default     = false
 }
+
+variable "tags" {
+  type        = list(string)
+  description = "list of tags added to the service"
+  default     = []
+}
+
+variable "json_params" {
+  type        = string
+  description = "provide parameters to configure"
+  default     = "{}"
+}
