@@ -10,6 +10,8 @@ resource "random_id" "id" {
 resource "cloudfoundry_service_instance" "redis" {
   name  = "tf-redis-${local.postfix}"
   space = var.cf_space_id
+  tags                           = var.tags
+  json_params                    = var.json_params
   //noinspection HILUnresolvedReference
   service_plan                   = data.cloudfoundry_service.redis.service_plans[var.plan]
   replace_on_service_plan_change = true
