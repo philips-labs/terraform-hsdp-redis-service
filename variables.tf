@@ -66,5 +66,5 @@ variable "tags" {
 variable "json_params" {
   type        = string
   description = "provide parameters to configure"
-  default     = ""
+  default     = "{}"
 }
