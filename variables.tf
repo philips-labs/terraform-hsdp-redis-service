@@ -60,6 +60,7 @@ variable "recursive_delete_service" {
 variable "tags" {
   type        = list(string)
   description = "list of tags added to the service"
+  defaut      = []
 }
 
 variable "json_params" {
