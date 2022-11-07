@@ -5,5 +5,5 @@ go 1.16
 require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/labstack/echo/v4 v4.9.1
-	github.com/spf13/viper v1.13.0
+	github.com/spf13/viper v1.14.0
 )
