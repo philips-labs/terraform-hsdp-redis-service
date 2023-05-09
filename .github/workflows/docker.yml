@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v3
       -
         name: Build and push sd
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: ./docker
           file: ./docker/Dockerfile
