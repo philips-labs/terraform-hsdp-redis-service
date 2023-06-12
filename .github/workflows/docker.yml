@@ -7,6 +7,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     steps:
       -
         name: Set up QEMU
@@ -27,9 +29,19 @@ jobs:
           registry: docker.na1.hsdp.io
           username: ${{ secrets.HSDP_DOCKER_USERNAME }}
           password: ${{ secrets.HSDP_DOCKER_PASSWORD }}
+      - name: Log in to the Github Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v3
-      -
-        name: Build and push sd
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ github.repository }}
+      - name: Build and push sd
         uses: docker/build-push-action@v4
         with:
           context: ./docker
@@ -37,6 +49,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           provenance: false
           push: true
-          tags: philipslabs/cf-redis-exporter,docker.na1.hsdp.io/philipslabs/cf-redis-exporter
-          cache-from: type=registry,ref=philipslabs/cf-redis-exporter:latest
-          cache-to: type=inline
+          tags: philipslabs/cf-redis-exporter,docker.na1.hsdp.io/philipslabs/cf-redis-exporter,${{ steps.meta.outputs.tags }}
