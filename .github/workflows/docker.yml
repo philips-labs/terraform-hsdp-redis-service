@@ -35,6 +35,7 @@ jobs:
           context: ./docker
           file: ./docker/Dockerfile
           platforms: linux/amd64,linux/arm64
+          provenance: false
           push: true
           tags: philipslabs/cf-redis-exporter,docker.na1.hsdp.io/philipslabs/cf-redis-exporter
           cache-from: type=registry,ref=philipslabs/cf-redis-exporter:latest

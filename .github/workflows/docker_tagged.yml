@@ -59,6 +59,7 @@ jobs:
           context: ./docker
           file: ./docker/Dockerfile
           platforms: linux/amd64,linux/arm64
+          provenance: false
           push: true
           tags: philipslabs/cf-redis-exporter:${{ steps.vars.outputs.tag }},docker.na1.hsdp.io/philipslabs/cf-redis-exporter:${{ steps.vars.outputs.tag }},${{ steps.meta.outputs.tags }}
       -
