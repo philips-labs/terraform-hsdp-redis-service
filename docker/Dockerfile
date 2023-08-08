@@ -1,10 +1,10 @@
-FROM golang:1.20.5-alpine as builder
+FROM golang:1.21.0-alpine as builder
 WORKDIR /go/src/github.com/oliver006/redis_exporter/
 RUN apk --no-cache add ca-certificates git
 RUN git clone https://github.com/oliver006/redis_exporter.git .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=$GOARCH go build -o /redis_exporter .
 
-FROM golang:1.20.5-alpine as builder2
+FROM golang:1.21.0-alpine as builder2
 WORKDIR /build
 COPY sd/ .
 RUN go mod download -x
